@@ -4,10 +4,9 @@ Logination is a simple login app. A Python-Flask CRUD-application also using Jav
 ### Project Setup (Windows)
 
 1. Install all the dependencies for this project:
-                1
-    'pip install -r requirements.txt'
+2. 'pip install -r requirements.txt'
     
 2. Run the app:
-    'py app.py'
+    *'py app.py'
     
  
