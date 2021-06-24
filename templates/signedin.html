@@ -1,4 +1,4 @@
-{% extends "bootstrap/base.html" %} {% block title %} {{name}} {% endblock %}
+{% extends "bootstrap/base.html" %} {% block title %} LOGINATION - LOGGED IN {% endblock %}
 {% block styles %} {{super()}}
 <link rel="stylesheet" href="{{url_for('.static', filename='style.css')}}" />
 {% endblock %} {% block content %}
@@ -14,7 +14,7 @@
         </li>
         <li>
           <a href="{{ url_for('logout') }}"
-            ><span class="glyphicon glyphicon-log-out"></span> LOGOUT</a
+            ><span class="glyphicon glyphicon-log-out"></span> Logout</a
           >
         </li>
       </ul>
@@ -26,7 +26,14 @@
   <h1 class="page-header">Welcome {{ name }}!</h1>
   <p id="signed-in-text">Manage your information, your privacy and security so that you get the most out of Logination.</p>
 
-
+  {% with messages = get_flashed_messages(category_filter=["error"]) %} {% if messages %} {% for msg in
+    messages %}
+    <div class="alert alert-danger ">{{ msg }}</div>
+    {% endfor %} {% endif %} {% endwith %}
+    {% with messages = get_flashed_messages(category_filter=["success"]) %} {% if messages %} {% for msg in
+      messages %}
+      <div class="alert alert-success ">{{ msg }}</div>
+      {% endfor %} {% endif %} {% endwith %}
 
   <div class="row">
     <div class="col-sm-6">
@@ -34,7 +41,7 @@
         <div class="card-body">
           <h5 class="card-title">Delete user</h5>
           <p class="card-text">If you choose to delete your account be aware that all user information will forever be gone. </p>
-          <a id="user-button" href="/delete/{{ id }}" ><span class="glyphicon glyphicon-remove"></span> DELETE USER</a>
+          <a id="user-button" class="btn btn-primary btn-block" href="/delete/{{ id }}" ><span class="glyphicon glyphicon-remove"></span> DELETE USER</a>
         </div>
       </div>
     </div>
@@ -43,7 +50,7 @@
         <div class="card-body">
           <h5 class="card-title">Change password</h5>
           <p class="card-text">Change your password often to keep your user account safe.</p>
-          <a id="user-button" href="/update/{{ id }}" ><span class="glyphicon glyphicon-pencil"></span> CHANGE PASSWORD</a>
+          <a id="user-button" class="btn btn-primary btn-block" href="/update/{{ id }}" ><span class="glyphicon glyphicon-pencil"></span> CHANGE PASSWORD</a>
         </div>
       </div>
     </div>

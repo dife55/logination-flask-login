@@ -11,12 +11,12 @@ block title %} Sign up {% endblock %} {% block styles %} {{super()}}
       <ul class="nav navbar-nav navbar-right">
         <li>
           <a href="{{ url_for('signup') }}"
-            ><span class="glyphicon glyphicon-user"></span> SIGN UP</a
+            ><span class="glyphicon glyphicon-user"></span> Sign up</a
           >
         </li>
         <li>
           <a href="{{ url_for('login') }}"
-            ><span class="glyphicon glyphicon-log-in"></span> LOGIN</a
+            ><span class="glyphicon glyphicon-log-in"></span> Login</a
           >
         </li>
       </ul>
@@ -26,11 +26,23 @@ block title %} Sign up {% endblock %} {% block styles %} {{super()}}
 
 <div class="container">
   <form class="form-signin" method="POST" action="/signup">
-    <h2 class="form-signin-heading" id="form-title"><span class="glyphicon glyphicon-user"></span> SIGN UP</h2>
-    {% with messages = get_flashed_messages() %} {% if messages %} {% for msg in
+    <h2 class="form-signin-heading" id="form-title"><span class="glyphicon glyphicon-user"></span> Sign up</h2>
+
+    {% with messages = get_flashed_messages(category_filter=["error"]) %} {% if messages %} {% for msg in
       messages %}
       <div class="alert alert-danger ">{{ msg }}</div>
       {% endfor %} {% endif %} {% endwith %}
+
+      {% with messages = get_flashed_messages(category_filter=["success"]) %} {% if messages %} {% for msg in
+        messages %}
+        <div class="alert alert-success ">{{ msg }}</div>
+        {% endfor %} {% endif %} {% endwith %}
+
+        {% with messages = get_flashed_messages(category_filter=["warning"]) %} {% if messages %} {% for msg in
+          messages %}
+          <div class="alert alert-warning ">{{ msg }}</div>
+          {% endfor %} {% endif %} {% endwith %}
+
     <p id="explain-text">Fill out the forms below to register a new user.</p>
     {{ form.hidden_tag() }} 
     {{ wtf.form_field(form.email, placeholder="Enter your email.") }} 

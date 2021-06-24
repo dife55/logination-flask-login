@@ -14,7 +14,7 @@
           </li>
           <li>
             <a href="{{ url_for('logout') }}"
-              ><span class="glyphicon glyphicon-log-out"></span> LOGOUT</a
+              ><span class="glyphicon glyphicon-log-out"></span> Log out</a
             >
           </li>
         </ul>
@@ -27,7 +27,7 @@
     <form class="form-signin" method="POST" action="/update/{{ user_to_update.id }}">
       {{ form.hidden_tag() }} 
       {{ wtf.form_field(form.password, placeholder="Create a new password") }} 
-      <button class="btn btn-lg btn-primary btn-block" id="submit-button" type="submit">UPDATE</button>
+      <button class="btn btn-lg btn-primary btn-block" id="submit-button" type="submit">SUBMIT</button>
     </form>
   </div>
   {% endblock %}

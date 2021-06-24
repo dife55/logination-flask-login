@@ -60,7 +60,6 @@ body {
   font-weight: 600;
 }
 
-
 #home-container{
   text-align: right;
 }
@@ -106,13 +105,22 @@ nav {
 .form-signin {
   max-width: 500px;
   padding: 15px;
+  border-radius: 45px;
   margin: auto;
 }
 
 #user-button{
-  font-size: 20px;
-  color: black !important;
-  font-weight: 600;
+  font-size: 15px;
+  color: rgb(255, 255, 255) !important;
+  background-color: rgb(43, 43, 43) !important;
+  font-weight: 400;
+  border: 0px;
+  padding: 10px;
+}
+
+#user-button:hover{
+  background-color: #00bfa5 !important;
+  transition: 0.6s ease;
 }
 
 .card-body{
@@ -127,6 +135,5 @@ nav {
 #signed-in-text{
   margin-bottom: 40px;
 }
-
 
 

@@ -36,6 +36,7 @@ def load_user(user_id):
 
 
 class LoginForm(FlaskForm):
+    
     email = StringField('Email', validators=[InputRequired(), Email(message='Invalid email'), Length(max=50)])
     password = PasswordField('Password', validators=[InputRequired(), Length(min=8, max=20)])
     remember = BooleanField('remember me')
@@ -90,8 +91,8 @@ def signup():
 
             return redirect(url_for('login'))
         except:
-            flash('The email is already taken. Try a different email.', 'success')
-            return render_template('signup.html', form=form)
+            flash('The email is already taken. Try a different email.', 'error')
+            return redirect('signup')
 
     return render_template('signup.html', form=form)
 
@@ -104,9 +105,12 @@ def delete(id):
     try:
         db.session.delete(user_to_delete)
         db.session.commit()
-        return redirect(url_for('index'))
+        
+        flash('The user account has been successfully deleted. Please create a new account if you want to use the logination services.', 'warning')
+        return redirect('/signup')
     except:
-        return "There was a problem deleting that user."
+        flash('There was a problem deleting that user.', 'error')
+        return redirect('/signup')
 
 
 @app.route('/update/<int:id>', methods=['POST', 'GET'])
@@ -114,14 +118,17 @@ def delete(id):
 def update(id):
     user_to_update = User.query.get_or_404(id)
     form = UpdateForm()
-    if request.method == "POST":
+    
+    if form.validate_on_submit():
         user_to_update.password = generate_password_hash(
             form.password.data, method='sha256')
         try:
             db.session.commit()
+            flash('Password successfully changed.', 'success')
             return redirect('/signedin')
         except:
-            return "There Was a problem updating the password"
+            flash('There was a problem changing the password', 'error')
+            return redirect('/signedin')
     else:
         return render_template('update.html', user_to_update=user_to_update, form=form, name=current_user.name, id=current_user.id )
 

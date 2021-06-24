@@ -12,12 +12,12 @@ services {% endblock %} {% block styles %} {{super()}}
       <ul class="nav navbar-nav navbar-right">
         <li>
           <a href="{{ url_for('signup') }}"
-            ><span class="glyphicon glyphicon-user"></span> SIGN UP</a
+            ><span class="glyphicon glyphicon-user"></span> Sign up</a
           >
         </li>
         <li>
           <a href="{{ url_for('login') }}"
-            ><span class="glyphicon glyphicon-log-in"></span> LOGIN</a
+            ><span class="glyphicon glyphicon-log-in"></span> Login</a
           >
         </li>
       </ul>
@@ -26,6 +26,7 @@ services {% endblock %} {% block styles %} {{super()}}
 </nav>
 
 <div class="container" id="home-container">
+
   <div class="row">
     <div class="col col-md-6" id="home-text">
       <h1 id="home-title">LOGINATION AT YOUR SERVICE</h1>
@@ -36,7 +37,6 @@ services {% endblock %} {% block styles %} {{super()}}
 
     </div>
   </div>
-
 
 
 {% endblock %}
