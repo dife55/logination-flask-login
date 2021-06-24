@@ -1,0 +1,57 @@
+{% extends "bootstrap/base.html" %} {% block title %} {{name}} {% endblock %}
+{% block styles %} {{super()}}
+<link rel="stylesheet" href="{{url_for('.static', filename='style.css')}}" />
+{% endblock %} {% block content %}
+<nav class="navbar navbar-inverse navbar-fixed-top">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="">LOGINATION</a>
+    </div>
+    <div id="navbar">
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+          <a href="/signedin"><span class="glyphicon glyphicon-user"></span> {{ name }}</a>
+        </li>
+        <li>
+          <a href="{{ url_for('logout') }}"
+            ><span class="glyphicon glyphicon-log-out"></span> LOGOUT</a
+          >
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="container">
+  <h1 class="page-header">Welcome {{ name }}!</h1>
+  <p id="signed-in-text">Manage your information, your privacy and security so that you get the most out of Logination.</p>
+
+
+
+  <div class="row">
+    <div class="col-sm-6">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Delete user</h5>
+          <p class="card-text">If you choose to delete your account be aware that all user information will forever be gone. </p>
+          <a id="user-button" href="/delete/{{ id }}" ><span class="glyphicon glyphicon-remove"></span> DELETE USER</a>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Change password</h5>
+          <p class="card-text">Change your password often to keep your user account safe.</p>
+          <a id="user-button" href="/update/{{ id }}" ><span class="glyphicon glyphicon-pencil"></span> CHANGE PASSWORD</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+{% endblock %}

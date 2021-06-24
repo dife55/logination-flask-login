@@ -1,0 +1,42 @@
+{% extends "bootstrap/base.html" %} {% block title %} LOGINATION - Login
+services {% endblock %} {% block styles %} {{super()}}
+<link rel="stylesheet" href="{{url_for('.static', filename='style.css')}}" />
+{% endblock %} {% block content %}
+
+<nav class="navbar navbar-inverse navbar-fixed-top">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="/">LOGINATION</a>
+    </div>
+    <div id="navbar">
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+          <a href="{{ url_for('signup') }}"
+            ><span class="glyphicon glyphicon-user"></span> SIGN UP</a
+          >
+        </li>
+        <li>
+          <a href="{{ url_for('login') }}"
+            ><span class="glyphicon glyphicon-log-in"></span> LOGIN</a
+          >
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="container" id="home-container">
+  <div class="row">
+    <div class="col col-md-6" id="home-text">
+      <h1 id="home-title">LOGINATION AT YOUR SERVICE</h1>
+      <p id="home-explain">
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Blanditiis, minima nisi, quo quas veritatis debitis nemo expedita dignissimos iure fuga neque aperiam sit temporibus necessitatibus. Laudantium fuga dicta, ullam excepturi debitis asperiores officia voluptatum aliquam. Delectus adipisci suscipit quaerat ducimus voluptas eum magnam eos, cumque blanditiis.
+
+      </p>
+
+    </div>
+  </div>
+
+
+
+{% endblock %}

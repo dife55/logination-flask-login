@@ -1,0 +1,132 @@
+@import url('https://fonts.googleapis.com/css2?family=Julius+Sans+One&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap');
+
+*{
+  font-family: "Open Sans", serif;
+}
+
+body {
+  padding: 50px;
+  margin-top: 70px;
+}
+
+#home-text{
+  padding: 40px 15px;
+  text-align: left;
+}
+
+#home-title{
+  font-family: "Montserrat", serif;
+  font-weight: 800;
+  line-height: 1.5;
+  font-size: 50px;
+  color: #00bfa5 
+}
+
+body {
+  padding-top: 40px;
+  padding-bottom: 40px;
+  background-color: rgb(255, 255, 255);
+}
+
+#home-explain{
+  font-size: 18px;
+  line-height: 2;
+}
+
+#submit-button{
+  border: 0px;
+  margin-bottom: 20px;
+  margin-top: 40px;
+  background-color: rgb(46, 46, 46);
+}
+
+#explain-text{
+  margin-bottom: 40px;
+}
+
+#submit-button:hover {
+  border: 0px;
+  background-color: #00bfa5;
+  color: #fff;
+  transition: 0.6s ease;
+}
+
+.navbar-brand {
+  font-family: "Montserrat", serif;
+  color: #00bfa5 !important;
+  font-size: 25px;
+  font-weight: 600;
+}
+
+
+#home-container{
+  text-align: right;
+}
+
+a {
+  font-weight: 400;
+  font-family: "Open Sans", serif;
+  font-size: 16px;
+  color: rgb(216, 216, 216) !important;
+}
+
+
+a:hover{
+  color: #00bfa5 !important;
+  transition: 0.6s ease;
+}
+
+
+nav {
+  -webkit-box-shadow: 0 8px 6px -6px rgb(124, 124, 124);
+  -moz-box-shadow: 0 8px 6px -6px rgb(153, 153, 153);
+  box-shadow: 0 8px 6px -6px rgb(153, 153, 153);
+  padding: 20px;
+}
+
+.card{
+  border: 1px solid rgb(226, 226, 226);
+  border-radius: 15px;
+}
+
+.card-text,  #signed-in-text{
+  font-size: 17px;
+  margin-bottom: 40px;
+}
+
+#form-title{
+  border-bottom: solid 1px rgb(206, 206, 206);
+  padding-bottom: 15px;
+  font-weight: 600;
+}
+
+
+.form-signin {
+  max-width: 500px;
+  padding: 15px;
+  margin: auto;
+}
+
+#user-button{
+  font-size: 20px;
+  color: black !important;
+  font-weight: 600;
+}
+
+.card-body{
+  padding: 20px;
+}
+
+.card-title{
+  font-size: 20px;
+  font-weight: 600;
+}
+
+#signed-in-text{
+  margin-bottom: 40px;
+}
+
+
+
