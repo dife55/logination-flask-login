@@ -19,7 +19,7 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
-
+# User model
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(50), unique=True)
@@ -29,60 +29,62 @@ class User(UserMixin, db.Model):
     last_seen = db.Column(db.DateTime(80))
     count = db.Column(db.Integer)
 
-
+    
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
 
-
+# Login Forms & Validators
 class LoginForm(FlaskForm):
-    
     email = StringField('Email', validators=[InputRequired(), Email(message='Invalid email'), Length(max=50)])
     password = PasswordField('Password', validators=[InputRequired(), Length(min=8, max=20)])
     remember = BooleanField('remember me')
 
-
+# Register Forms & Validators
 class RegisterForm(FlaskForm):
-
     email = StringField("What's your email?",  validators=[InputRequired(), Email(message='Invalid email'), Length(max=50)])
     name = StringField("What should we call you?", validators=[InputRequired()])
     password = PasswordField("Create a password", validators=[InputRequired(), Length(min=8, max=20)])
 
+# Update Form & Validator
 class UpdateForm(FlaskForm):
     password = PasswordField("Create a new password", validators=[InputRequired(), Length(min=8, max=20)])
 
+# Starting page
 @app.route('/')
 def index():
     return render_template('index.html')
 
-
+# Login
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
-
+    
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
+
         if user:
             if check_password_hash(user.password, form.password.data):
                 login_user(user, remember=form.remember.data)
-
+                
+                
                 return redirect(url_for('dashboard'))
-            
+
         flash('Invalid email or password. Try again!', 'error')
         return render_template('login.html', form=form)
 
     return render_template('login.html', form=form)
 
-
+# Sign up
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     form = RegisterForm()
 
-    if form.validate_on_submit():
+    if form.validate_on_submit() :
         hashed_password = generate_password_hash(
             form.password.data, method='sha256')
         new_user = User(email=form.email.data, name=form.name.data, password=hashed_password,
-                        created=datetime.datetime.now(), last_seen=datetime.datetime.now(), count=1)
+                        created=datetime.datetime.now(), last_seen=datetime.datetime.now(), count=0)
         try:
             db.session.add(new_user)
             db.session.commit()
@@ -96,7 +98,14 @@ def signup():
 
     return render_template('signup.html', form=form)
 
+# Do this when Log in
+@app.before_request
+def update_last_active():
 
+    current_user.last_seen = datetime.datetime.now()
+    db.session.commit()
+    
+# Delete user
 @app.route('/delete/<int:id>')
 @login_required
 def delete(id):
@@ -112,16 +121,18 @@ def delete(id):
         flash('There was a problem deleting that user.', 'error')
         return redirect('/signup')
 
-
+# Update user (change password)
 @app.route('/update/<int:id>', methods=['POST', 'GET'])
 @login_required
 def update(id):
     user_to_update = User.query.get_or_404(id)
     form = UpdateForm()
     
-    if form.validate_on_submit():
+    if form.validate_on_submit() :
+        current_user.count+=1
         user_to_update.password = generate_password_hash(
             form.password.data, method='sha256')
+
         try:
             db.session.commit()
             flash('Password successfully changed.', 'success')
@@ -131,14 +142,16 @@ def update(id):
             return redirect('/signedin')
     else:
         return render_template('update.html', user_to_update=user_to_update, form=form, name=current_user.name, id=current_user.id )
+    
 
-
+# Signed in
 @app.route('/signedin')
 @login_required
 def dashboard():
+
     return render_template('signedin.html', name=current_user.name, id=current_user.id)
 
-
+# Log out
 @app.route('/logout')
 @login_required
 def logout():
