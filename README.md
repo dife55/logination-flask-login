@@ -7,5 +7,5 @@ Install all the dependencies for this project
 * py -m pip install -r requirements.txt
 
 Run the app:
-py app.py
+* py app.py
  
