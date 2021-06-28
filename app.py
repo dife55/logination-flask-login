@@ -2,7 +2,7 @@ from flask import Flask, flash, render_template, redirect, url_for, request
 from flask_bootstrap import Bootstrap
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField
-from wtforms.validators import InputRequired, Email, Length
+from wtforms.validators import InputRequired, Email, Length, Regexp
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
@@ -19,7 +19,7 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
-# User model
+# USER MODEL
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(50), unique=True)
@@ -30,32 +30,32 @@ class User(UserMixin, db.Model):
     count = db.Column(db.Integer)
 
     
+# --- Login-Forms & Validators ---
+class LoginForm(FlaskForm):
+    email = StringField('Email', validators=[InputRequired(), Email(message='Invalid email'), Length(max=50)])
+    password = PasswordField('Password', validators=[InputRequired(), Length(min=8, max=20), Regexp('(?=[A-Za-z0-9@#$%^&+!=]+$)^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).*$', message="Password must contain at least one uppercase, one lowercase and one number.")])
+    remember = BooleanField('remember me')
+
+# --- Register-Forms & Validators ---
+class RegisterForm(FlaskForm):
+    email = StringField("What's your email?",  validators=[InputRequired(), Email(message='Invalid email'), Length(max=50)])
+    name = StringField("What should we call you?", validators=[InputRequired()])
+    password = PasswordField("Create a password", validators=[InputRequired(), Length(min=8, max=20), Regexp('(?=[A-Za-z0-9@#$%^&+!=]+$)^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).*$', message="Password must contain at least one uppercase, one lowercase and one number.")])
+
+# --- Update-Form & Validator ---
+class UpdateForm(FlaskForm):
+    password = PasswordField("Create a new password", validators=[InputRequired(), Length(min=8, max=20), Regexp('(?=[A-Za-z0-9@#$%^&+!=]+$)^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).*$', message="Password must contain at least one uppercase, one lowercase and one number.")])
+
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
 
-# Login Forms & Validators
-class LoginForm(FlaskForm):
-    email = StringField('Email', validators=[InputRequired(), Email(message='Invalid email'), Length(max=50)])
-    password = PasswordField('Password', validators=[InputRequired(), Length(min=8, max=20)])
-    remember = BooleanField('remember me')
-
-# Register Forms & Validators
-class RegisterForm(FlaskForm):
-    email = StringField("What's your email?",  validators=[InputRequired(), Email(message='Invalid email'), Length(max=50)])
-    name = StringField("What should we call you?", validators=[InputRequired()])
-    password = PasswordField("Create a password", validators=[InputRequired(), Length(min=8, max=20)])
-
-# Update Form & Validator
-class UpdateForm(FlaskForm):
-    password = PasswordField("Create a new password", validators=[InputRequired(), Length(min=8, max=20)])
-
-# Starting page
+# --- Starting page ---
 @app.route('/')
 def index():
     return render_template('index.html')
 
-# Login
+# --- Login ---
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
@@ -67,6 +67,8 @@ def login():
             if check_password_hash(user.password, form.password.data):
                 login_user(user, remember=form.remember.data)
                 
+                current_user.count +=1 # add +1 to login count
+                db.session.commit()
                 
                 return redirect(url_for('dashboard'))
 
@@ -75,7 +77,7 @@ def login():
 
     return render_template('login.html', form=form)
 
-# Sign up
+# --- Register new User ---
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     form = RegisterForm()
@@ -83,8 +85,7 @@ def signup():
     if form.validate_on_submit() :
         hashed_password = generate_password_hash(
             form.password.data, method='sha256')
-        new_user = User(email=form.email.data, name=form.name.data, password=hashed_password,
-                        created=datetime.datetime.now(), last_seen=datetime.datetime.now(), count=0)
+        new_user = User(email=form.email.data, name=form.name.data, password=hashed_password, created=datetime.datetime.now(), last_seen=datetime.datetime.now(), count=0)
         try:
             db.session.add(new_user)
             db.session.commit()
@@ -98,14 +99,15 @@ def signup():
 
     return render_template('signup.html', form=form)
 
-# Do this when Log in
+# --- Do this when Log in ---
 @app.before_request
 def update_last_active():
 
+    # update the last_seen column
     current_user.last_seen = datetime.datetime.now()
     db.session.commit()
-    
-# Delete user
+
+# --- Delete User ---
 @app.route('/delete/<int:id>')
 @login_required
 def delete(id):
@@ -121,15 +123,14 @@ def delete(id):
         flash('There was a problem deleting that user.', 'error')
         return redirect('/signup')
 
-# Update user (change password)
+# --- Update user (change password) ---
 @app.route('/update/<int:id>', methods=['POST', 'GET'])
 @login_required
 def update(id):
     user_to_update = User.query.get_or_404(id)
     form = UpdateForm()
-    
+
     if form.validate_on_submit() :
-        current_user.count+=1
         user_to_update.password = generate_password_hash(
             form.password.data, method='sha256')
 
@@ -142,16 +143,19 @@ def update(id):
             return redirect('/signedin')
     else:
         return render_template('update.html', user_to_update=user_to_update, form=form, name=current_user.name, id=current_user.id )
-    
+        
 
-# Signed in
+
+# --- Signed in ---
 @app.route('/signedin')
 @login_required
 def dashboard():
 
     return render_template('signedin.html', name=current_user.name, id=current_user.id)
 
-# Log out
+
+
+# --- Log out ---
 @app.route('/logout')
 @login_required
 def logout():
