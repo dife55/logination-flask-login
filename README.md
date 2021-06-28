@@ -1,5 +1,5 @@
 # Logination
-Logination is a simple login app. A Python-Flask CRUD-application also using JavaScript &amp; HTML/CSS as frontend.
+Logination is a simple login app. A Python-Flask CRUD-application also using HTML/CSS as frontend.
 
 ### Project Setup (Windows)
 
